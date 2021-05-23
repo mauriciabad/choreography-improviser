@@ -1,14 +1,26 @@
 <template>
   <div>
-    <visual-metronome v-if="isPlaying" :beatNumber="beatNumber" />
+    <div v-if="isPlaying" class="main__title">
+      {{ playingSong.name }} by
+      {{ playingSong.artists[0].name }}
+    </div>
     <div v-else class="main__pause">Play a song to start</div>
+
+    <visual-metronome v-if="isPlaying" :beatNumber="beatNumber" />
   </div>
 </template>
 
 <script lang="ts">
 import VisualMetronome from '@/components/VisualMetronome.vue'
 import useSpotify, { CurrentlyPlayingResponse } from '@/compositions/spotify'
-import { computed, defineComponent, onMounted, ref, watchEffect } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  ref,
+  watch,
+  watchEffect,
+} from 'vue'
 
 export default defineComponent({
   components: {
@@ -18,6 +30,7 @@ export default defineComponent({
     const { spotifyApi } = useSpotify()
     const recentlyPlayed = ref<CurrentlyPlayingResponse | undefined>()
     const isPlaying = computed(() => recentlyPlayed.value?.is_playing)
+    const playingSong = computed(() => recentlyPlayed.value?.item)
 
     onMounted(async () => {
       try {
@@ -28,6 +41,14 @@ export default defineComponent({
           `Error fetching the currently playing song: ${error.message}`,
           error
         )
+      }
+    })
+
+    watch(playingSong, async () => {
+      if (playingSong.value) {
+        bpm.value = (
+          await spotifyApi.getAudioFeaturesForTrack(playingSong.value.id)
+        ).tempo
       }
     })
 
@@ -50,7 +71,7 @@ export default defineComponent({
 
     const beatNumber = ref(1)
 
-    return { recentlyPlayed, beatNumber, isPlaying }
+    return { recentlyPlayed, beatNumber, isPlaying, playingSong }
   },
 })
 </script>
