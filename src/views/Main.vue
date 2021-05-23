@@ -6,7 +6,12 @@
     </div>
     <div v-else class="main__pause">Play a song to start</div>
 
-    <visual-metronome v-if="isPlaying" :beatNumber="beatNumber" />
+    <visual-metronome
+      v-if="isPlaying"
+      :beatNumber="beatNumber"
+      :beatDuration="msPerBeat"
+      :totalBeats="totalBeats"
+    />
   </div>
 </template>
 
@@ -53,6 +58,7 @@ export default defineComponent({
     })
 
     const songStart = ref(Date.now())
+    const totalBeats = 8
     const bpm = ref(100)
     const msPerBeat = computed(() => (1000 * 60) / bpm.value)
     const timeIntervalId = ref<number | undefined>(undefined)
@@ -63,7 +69,8 @@ export default defineComponent({
       if (isPlaying.value) {
         timeIntervalId.value = setInterval(() => {
           beatNumber.value =
-            (Math.floor((Date.now() - songStart.value) / msPerBeat.value) % 8) +
+            (Math.floor((Date.now() - songStart.value) / msPerBeat.value) %
+              totalBeats) +
             1
         }, msPerBeat.value)
       }
@@ -71,7 +78,14 @@ export default defineComponent({
 
     const beatNumber = ref(1)
 
-    return { recentlyPlayed, beatNumber, isPlaying, playingSong }
+    return {
+      recentlyPlayed,
+      beatNumber,
+      isPlaying,
+      playingSong,
+      msPerBeat,
+      totalBeats,
+    }
   },
 })
 </script>
