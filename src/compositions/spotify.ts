@@ -80,6 +80,7 @@ const isAuthenticated = computed(() =>
 const spotifyApi = new SpotifyWebApi()
 spotifyApi.setAccessToken(authenticationDetails.accessToken)
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function useSpotify() {
   const login = async () => {
     window.location.replace(
