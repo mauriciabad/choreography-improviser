@@ -86,7 +86,7 @@ export default function useSpotify() {
   }
 
   const processLogin = () => {
-    const hash = window.location.hash.split('#')[0]
+    const hash = window.location.hash.replace(/^#)/, '')
     if (!hash) return false
 
     const authenticationResponse = Object.fromEntries(
