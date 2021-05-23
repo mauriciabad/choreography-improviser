@@ -11,11 +11,11 @@ type AuthenticationDetails =
 
 interface ValidAuthenticationDetails {
   accessToken: string
-  expiresIn: Date
+  expiresInTimestamp: number
 }
 interface InvalidAuthenticationDetails {
   accessToken: ''
-  expiresIn: Date
+  expiresInTimestamp: number
 }
 
 interface AuthenticationResponse {
@@ -28,7 +28,7 @@ interface AuthenticationResponse {
 function makeInvalidAuthenticationDetails(): InvalidAuthenticationDetails {
   return {
     accessToken: '',
-    expiresIn: new Date(0),
+    expiresInTimestamp: 0,
   }
 }
 
@@ -38,7 +38,7 @@ function isValidAuthenticationDetails(
 ): authenticationDetails is ValidAuthenticationDetails {
   return (
     !!authenticationDetails.accessToken &&
-    now.getTime() < authenticationDetails.expiresIn.getTime()
+    now.getTime() < authenticationDetails.expiresInTimestamp
   )
 }
 
@@ -101,9 +101,8 @@ export default function useSpotify() {
     ) as unknown as AuthenticationResponse
 
     authenticationDetails.accessToken = authenticationResponse.access_token
-    authenticationDetails.expiresIn = new Date(
+    authenticationDetails.expiresInTimestamp =
       Date.now() + parseInt(authenticationResponse.expires_in) * 1000
-    )
 
     return isValidAuthenticationDetails(authenticationDetails)
   }
