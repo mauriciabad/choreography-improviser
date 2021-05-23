@@ -1,4 +1,7 @@
+import SpotifyWebApi from 'spotify-web-api-js'
 import { computed, reactive, ref, watch } from 'vue'
+
+export type CurrentlyPlayingResponse = SpotifyApi.CurrentlyPlayingResponse
 
 const spotifyAppId = '4eb1abefbd3d4ad89dcbbfc981324d4f'
 
@@ -60,6 +63,7 @@ const authenticationDetails = reactive<AuthenticationDetails>(
 )
 
 watch(authenticationDetails, () => {
+  spotifyApi.setAccessToken(authenticationDetails.accessToken)
   setSpotifyAuthenticationDetailsInLocalStorage(authenticationDetails)
 })
 
@@ -72,6 +76,9 @@ setInterval(() => {
 const isAuthenticated = computed(() =>
   isValidAuthenticationDetails(authenticationDetails, now.value)
 )
+
+const spotifyApi = new SpotifyWebApi()
+spotifyApi.setAccessToken(authenticationDetails.accessToken)
 
 export default function useSpotify() {
   const login = async () => {
@@ -101,15 +108,5 @@ export default function useSpotify() {
     return isValidAuthenticationDetails(authenticationDetails)
   }
 
-  const fetchApi: typeof fetch = (url: RequestInfo, init?: RequestInit) => {
-    return fetch(url, {
-      ...init,
-      headers: {
-        Authorization: `Bearer ${authenticationDetails.accessToken}`,
-        ...init?.headers,
-      },
-    })
-  }
-
-  return { isAuthenticated, login, processLogin, fetchApi }
+  return { isAuthenticated, login, processLogin, spotifyApi }
 }
