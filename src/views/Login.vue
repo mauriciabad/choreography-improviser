@@ -15,9 +15,7 @@ export default defineComponent({
 
     const loginSuccessful = processLogin()
     if (loginSuccessful) {
-      router.push({
-        name: 'main',
-      })
+      router.push({ name: 'main' })
     } else {
       login()
     }

@@ -2,6 +2,25 @@
   <router-view />
 </template>
 
+<script>
+import { defineComponent, watchEffect } from 'vue'
+import useSpotify from '@/compositions/spotify'
+import { useRouter } from 'vue-router'
+
+export default defineComponent({
+  setup() {
+    const router = useRouter()
+    const { isAuthenticated } = useSpotify()
+
+    watchEffect(() => {
+      if (!isAuthenticated.value) router.push({ name: 'login' })
+    })
+
+    return {}
+  },
+})
+</script>
+
 <style lang="scss">
 #app {
   font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,

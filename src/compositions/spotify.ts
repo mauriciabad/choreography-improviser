@@ -69,7 +69,7 @@ setInterval(() => {
   now.value = new Date(now.value.getTime() + nowUpdateInterval)
 }, nowUpdateInterval)
 
-const isAuthented = computed(() =>
+const isAuthenticated = computed(() =>
   isValidAuthenticationDetails(authenticationDetails, now.value)
 )
 
@@ -101,5 +101,5 @@ export default function useSpotify() {
     return isValidAuthenticationDetails(authenticationDetails)
   }
 
-  return { isAuthented, login, processLogin }
+  return { isAuthenticated, login, processLogin }
 }
