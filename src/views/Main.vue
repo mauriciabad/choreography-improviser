@@ -18,8 +18,15 @@ export default defineComponent({
     const recentlyPlayed = ref<CurrentlyPlayingResponse | undefined>()
 
     onMounted(async () => {
-      recentlyPlayed.value = await spotifyApi.getMyCurrentPlayingTrack()
-      console.log('recentlyPlayed', recentlyPlayed.value)
+      try {
+        recentlyPlayed.value = await spotifyApi.getMyCurrentPlayingTrack()
+        console.log('recentlyPlayed', recentlyPlayed.value)
+      } catch (error) {
+        console.error(
+          `Error fetching the currently playing song: ${error.message}`,
+          error
+        )
+      }
     })
 
     const songStart = ref(Date.now())
