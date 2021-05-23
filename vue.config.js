@@ -9,6 +9,8 @@ module.exports = {
       favicon32: 'img/icons/favicon-32x32.png',
       favicon16: 'img/icons/favicon-16x16.png',
       appleTouchIcon: 'img/icons/maskable_icon_x192.png',
+      maskIcon: null,
+      msTileImage: null,
     },
     manifestOptions: {
       icons: [
@@ -26,9 +28,7 @@ module.exports = {
       ],
     },
 
-    workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: 'src/service-worker.js',
       skipWaiting: true,
       clientsClaim: true,
     },
