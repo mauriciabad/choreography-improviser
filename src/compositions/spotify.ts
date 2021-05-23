@@ -101,5 +101,15 @@ export default function useSpotify() {
     return isValidAuthenticationDetails(authenticationDetails)
   }
 
-  return { isAuthenticated, login, processLogin }
+  const fetchApi: typeof fetch = (url: RequestInfo, init?: RequestInit) => {
+    return fetch(url, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${authenticationDetails.accessToken}`,
+        ...init?.headers,
+      },
+    })
+  }
+
+  return { isAuthenticated, login, processLogin, fetchApi }
 }
