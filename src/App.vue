@@ -12,7 +12,6 @@ export default defineComponent({
     const router = useRouter()
     const { isAuthenticated } = useSpotify()
 
-    if (!isAuthenticated.value) router.push({ name: 'login' })
     watch(isAuthenticated, () => {
       if (!isAuthenticated.value) router.push({ name: 'login' })
     })
