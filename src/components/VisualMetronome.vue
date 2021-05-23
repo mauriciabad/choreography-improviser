@@ -1,5 +1,6 @@
 <template>
   <div class="metronome">
+    <div class="metronome__ring"></div>
     <span class="metronome__beat">{{ beatNumber }}</span>
   </div>
 </template>
@@ -22,11 +23,20 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  font-size: max(1em, 25vmin);
 
   &__beat {
-    font-size: max(1em, 25vmin);
     display: block;
     font-weight: 100;
+  }
+
+  &__ring {
+    border: solid 0.02em;
+    position: absolute;
+    height: 2em;
+    width: 2em;
+    border-radius: 100%;
   }
 }
 </style>
