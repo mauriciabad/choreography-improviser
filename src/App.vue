@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { defineComponent, watchEffect } from 'vue'
+import { defineComponent, watch } from 'vue'
 import useSpotify from '@/compositions/spotify'
 import { useRouter } from 'vue-router'
 
@@ -12,7 +12,8 @@ export default defineComponent({
     const router = useRouter()
     const { isAuthenticated } = useSpotify()
 
-    watchEffect(() => {
+    if (!isAuthenticated.value) router.push({ name: 'login' })
+    watch(isAuthenticated, () => {
       if (!isAuthenticated.value) router.push({ name: 'login' })
     })
 
