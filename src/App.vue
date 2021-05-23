@@ -13,7 +13,7 @@ export default defineComponent({
     const { isAuthenticated } = useSpotify()
 
     watchEffect(() => {
-      // if (!isAuthenticated.value) router.push({ name: 'login' })
+      if (!isAuthenticated.value) router.push({ name: 'login' })
     })
 
     return {}
