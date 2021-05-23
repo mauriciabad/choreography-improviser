@@ -80,7 +80,7 @@ export default function useSpotify() {
         client_id: spotifyAppId,
         response_type: 'token',
         redirect_uri: `${window.location.origin}/login`,
-        scope: [].join(' '),
+        scope: ['user-read-currently-playing'].join(' '),
       })}`
     )
   }
