@@ -1,6 +1,7 @@
 <template>
   <div>
-    <visual-metronome :beatNumber="beatNumber" />
+    <visual-metronome v-if="isPlaying" :beatNumber="beatNumber" />
+    <div v-else class="main__pause">Play a song to start</div>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ export default defineComponent({
   setup() {
     const { spotifyApi } = useSpotify()
     const recentlyPlayed = ref<CurrentlyPlayingResponse | undefined>()
+    const isPlaying = computed(() => recentlyPlayed.value?.is_playing)
 
     onMounted(async () => {
       try {
@@ -36,15 +38,19 @@ export default defineComponent({
 
     watchEffect(() => {
       clearInterval(timeIntervalId.value)
-      timeIntervalId.value = setInterval(() => {
-        beatNumber.value =
-          (Math.floor((Date.now() - songStart.value) / msPerBeat.value) % 8) + 1
-      }, msPerBeat.value)
+
+      if (isPlaying.value) {
+        timeIntervalId.value = setInterval(() => {
+          beatNumber.value =
+            (Math.floor((Date.now() - songStart.value) / msPerBeat.value) % 8) +
+            1
+        }, msPerBeat.value)
+      }
     })
 
     const beatNumber = ref(1)
 
-    return { recentlyPlayed, beatNumber }
+    return { recentlyPlayed, beatNumber, isPlaying }
   },
 })
 </script>
