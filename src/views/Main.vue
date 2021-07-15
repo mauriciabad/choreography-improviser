@@ -32,12 +32,14 @@ import {
   watch,
   watchEffect,
 } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   components: {
     VisualMetronome,
   },
   setup() {
+    const router = useRouter()
     const { spotifyApi } = useSpotify()
     const recentlyPlayed = ref<CurrentlyPlayingResponse | undefined>()
     const isPlaying = computed(() => recentlyPlayed.value?.is_playing)
@@ -48,10 +50,14 @@ export default defineComponent({
         recentlyPlayed.value = await spotifyApi.getMyCurrentPlayingTrack()
         console.log('recentlyPlayed', recentlyPlayed.value)
       } catch (error) {
-        console.error(
-          `Error fetching the currently playing song: ${error.message}`,
-          error
-        )
+        if (error.status === 401) {
+          router.push({ name: 'login' })
+        } else {
+          console.error(
+            `Error fetching the currently playing song: ${error.message}`,
+            error
+          )
+        }
       }
     })
 
