@@ -4,7 +4,13 @@
       {{ playingSong.name }} by
       {{ playingSong.artists[0].name }}
     </div>
-    <div v-else class="main__pause">Play a song to start</div>
+    <div v-else class="main__pause">
+      <p>
+        Play a song in
+        <a href="https://open.spotify.com/" target="_blank">Spotify's app</a> to
+        start
+      </p>
+    </div>
 
     <visual-metronome
       v-if="isPlaying"
@@ -89,3 +95,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.main {
+  &__pause {
+    display: grid;
+    place-content: center;
+    text-align: center;
+    min-height: 100vh;
+    padding: 0 1rem;
+    font-size: clamp(1.25rem, 5vw, 2rem);
+
+    p {
+      margin: 0;
+    }
+  }
+}
+</style>
