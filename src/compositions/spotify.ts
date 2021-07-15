@@ -4,6 +4,14 @@ import { computed, reactive, ref, watch } from 'vue'
 export type CurrentlyPlayingResponse = SpotifyApi.CurrentlyPlayingResponse
 
 const spotifyAppId = '4eb1abefbd3d4ad89dcbbfc981324d4f'
+const spotifyAuthorizationUrl = `https://accounts.spotify.com/authorize?${new URLSearchParams(
+  {
+    client_id: spotifyAppId,
+    response_type: 'token',
+    redirect_uri: `${window.location.origin}/login`,
+    scope: ['user-read-currently-playing'].join(' '),
+  }
+)}`
 
 type AuthenticationDetails =
   | ValidAuthenticationDetails
@@ -83,14 +91,7 @@ spotifyApi.setAccessToken(authenticationDetails.accessToken)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function useSpotify() {
   const login = async () => {
-    window.location.replace(
-      `https://accounts.spotify.com/authorize?${new URLSearchParams({
-        client_id: spotifyAppId,
-        response_type: 'token',
-        redirect_uri: `${window.location.origin}/login`,
-        scope: ['user-read-currently-playing'].join(' '),
-      })}`
-    )
+    window.location.replace(spotifyAuthorizationUrl)
   }
 
   const processLogin = () => {
