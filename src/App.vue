@@ -3,17 +3,19 @@
 </template>
 
 <script>
-import { defineComponent, watch } from 'vue'
+import { defineComponent, watch, onMounted } from 'vue'
 import useSpotify from '@/compositions/spotify'
-import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup() {
-    const router = useRouter()
-    const { isAuthenticated } = useSpotify()
+    const { isAuthenticated, login } = useSpotify()
 
     watch(isAuthenticated, () => {
-      if (!isAuthenticated.value) router.push({ name: 'login' })
+      if (!isAuthenticated.value) login()
+    })
+
+    onMounted(() => {
+      if (!isAuthenticated.value) login()
     })
 
     return {}

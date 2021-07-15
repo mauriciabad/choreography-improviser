@@ -38,7 +38,7 @@ export default defineComponent({
     VisualMetronome,
   },
   setup() {
-    const { spotifyApi, login } = useSpotify()
+    const { spotifyApi } = useSpotify()
     const recentlyPlayed = ref<CurrentlyPlayingResponse | undefined>()
     const isPlaying = computed(() => recentlyPlayed.value?.is_playing)
     const playingSong = computed(() => recentlyPlayed.value?.item)
@@ -48,14 +48,10 @@ export default defineComponent({
         recentlyPlayed.value = await spotifyApi.getMyCurrentPlayingTrack()
         console.log('recentlyPlayed', recentlyPlayed.value)
       } catch (error) {
-        if (error.status === 401) {
-          login()
-        } else {
-          console.error(
-            `Error fetching the currently playing song: ${error.message}`,
-            error
-          )
-        }
+        console.error(
+          `Error fetching the currently playing song: ${error.message}`,
+          error
+        )
       }
     })
 

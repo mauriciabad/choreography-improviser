@@ -1,9 +1,10 @@
 <template>
-  <div>You'll be redirected to login in spotify</div>
+  <div v-if="loginSuccessful">Successfully logged in spotify</div>
+  <div v-else>Failed logging in spotify</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import useSpotify from '@/compositions/spotify'
 import { useRouter } from 'vue-router'
 
@@ -11,16 +12,14 @@ export default defineComponent({
   components: {},
   setup() {
     const router = useRouter()
-    const { processLogin, login } = useSpotify()
+    const { processLogin } = useSpotify()
 
-    const loginSuccessful = processLogin()
-    if (loginSuccessful) {
+    const loginSuccessful = ref(processLogin())
+    if (loginSuccessful.value) {
       router.push({ name: 'main' })
-    } else {
-      login()
     }
 
-    return {}
+    return { loginSuccessful }
   },
 })
 </script>
